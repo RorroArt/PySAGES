@@ -1,12 +1,14 @@
 # SPDX-License-Identifier: MIT
 # See LICENSE.md and CONTRIBUTORS.md at https://github.com/SSAGESLabs/PySAGES
 
+from dataclasses import dataclass
+
 from jax import numpy as np
 from jax.lax import while_loop
 from jax.scipy import signal
 
 from pysages.ml.optimizers import build
-from pysages.typing import JaxArray, NamedTuple
+from pysages.typing import JaxArray, NamedTuple, Scalar
 
 
 class NNData(NamedTuple):
@@ -53,3 +55,6 @@ def build_fitting_function(model, optimizer):
         return state
 
     return fit
+
+
+
