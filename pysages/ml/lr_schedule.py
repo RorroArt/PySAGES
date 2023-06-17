@@ -1,4 +1,7 @@
+from dataclasses import dataclass
+import math
 
+from pysages.typing import JaxArray, NamedTuple, Scalar
 
 @dataclass
 class LRSchedule:
@@ -9,6 +12,7 @@ class LRSchedule:
     """
     last_epoch: Scalar
     learning_rate: Scalar
+    step_count: Scalar = 0
     update: Callable
 
 
@@ -19,15 +23,17 @@ class StepLR(LRSchedule):
         self.step_size = step_size
         self.gamma = gamma
         self.last_epoch = last_epoch
+
         
     def update(self):
         learning_rate = self.learning_rate
-        self.last_epoch += 1
+        self.last_epoch += 1c
 
         if self.last_epoch == 0 or self.last_epoch % self.step_size == 0:
             self.learning_rate = learning_rate * gamma
             return learning_rate * gamma 
-
+        
+        self.step_count += 1
         return learning_rate
 
 @dataclass 
@@ -37,13 +43,42 @@ def __init__(self, learning_rate, milestones, gamma, last_epoch=-1):
         self.milestones = milestones
         self.gamma = gamma
         self.last_epoch = last_epoch
-        
+
     def update(self):
         learning_rate = self.learning_rate
         self.last_epoch += 1
-
+        
         if self.last_epoch == 0 or self.last_epoch is in self.milestones:
             self.learning_rate = learning_rate * gamma
             return learning_rate * gamma 
+        
+        self.step_count += 1
+        
+        return learning_rate
 
+@dataclass
+class CosineAnnealingLR(LRScheduler):
+    def __init__(self, T_max, eta_min=0, last_epoch=-1):
+        self.T_max = T_max
+        self.eta_min = eta_min
+        self.last_epoch = last_epoch
+
+    def update(self):
+        learning_rate = self.learning_rate
+        self.last_epoch += 1
+    
+        if self.last_epoch == 0:
+            return learning_rate
+        elif self.step_count and self.last_epoch > 0:
+            learning_rate = self.eta_min + (learning_rate - self.eta_min) * (1-math.cos(math.pi / self.T_max)) / 2
+        elif (self.last_epoch - 1 - self.T_max) % (2 * self.T_max):
+            learning_rate = + (base_lr - self.eta_min) * (1 - math.cos(math.pi / self.T_max)) / 2
+        else:
+            learning_rate = (1 + math.cos(math.pi * self.last_epoch / self.T_max)) /
+                (1 + math.cos(math.pi * (self.last_epoch - 1) / self.T_max)) *
+                (learning_rate - self.eta_min) + self.eta_min
+        
+        self.learning_rate = learning_rate
+        self.step_count += 1
+        
         return learning_rate
