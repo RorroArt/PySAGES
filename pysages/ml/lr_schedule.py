@@ -117,7 +117,29 @@ class ConstantLR(LRScheduler):
         learning_rate = self.learning_rate
     
         if self.last_epoch == 0 or learning_rate < self.max_iters:
-            learning_rate = learning_rate + self.factor
+            learning_rate = learning_rate * self.factor
+
+        self.step_count += 1
+        self.last_epoch += 1
+
+        return learning_rate
+
+@dataclass
+class LinearLR(LRScheduler):
+    def __init__(self, inital_factor=1/3, final_factor=1, max_iters=5, last_epoch=-1):
+        self.initial_factor = initial_factor
+        self.final_factor = final_factor
+        self.max_iters = max_iters
+        self.last_epoch = last_epoch
+
+        assert initial_factor <= 1 and factor >= 0, 'Initial factor must be between 0 and 1'
+        assert final_factor <= 1 and factor >= 0, 'Final factor must be between 0 and 1'  
+
+    def update(self):
+        learning_rate = self.learning_rate
+    
+        if self.last_epoch == 0 or learning_rate < self.max_iters:
+            learning_rate = learning_rate * self.factor
 
         self.learning_rate = learning_rate
         self.step_count += 1
