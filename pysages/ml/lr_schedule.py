@@ -65,7 +65,6 @@ class CosineAnnealingLR(LRScheduler):
 
     def update(self):
         learning_rate = self.learning_rate
-        self.last_epoch += 1
     
         if self.last_epoch == 0:
             return learning_rate
@@ -80,5 +79,48 @@ class CosineAnnealingLR(LRScheduler):
         
         self.learning_rate = learning_rate
         self.step_count += 1
-        
+        self.last_epoch += 1
+
+        return learning_rate
+
+@dataclass
+class ConstantLR(LRScheduler):
+    def __init__(self, factor=1/3, max_iters=5, last_epoch=-1):
+        self.factor = factor
+        self.max_iters = max_iters
+        self.last_epoch = last_epoch
+
+        assert factor <= 1 and factor >= 0, 'Factor must be between 0 and 1' 
+
+    def update(self):
+        learning_rate = self.learning_rate
+    
+        if self.last_epoch == 0 or learning_rate < self.max_iters:
+            learning_rate = learning_rate + self.factor
+
+        self.learning_rate = learning_rate
+        self.step_count += 1
+        self.last_epoch += 1
+
+        return learning_rate
+
+@dataclass
+class ConstantLR(LRScheduler):
+    def __init__(self, factor=1/3, max_iters=5, last_epoch=-1):
+        self.factor = factor
+        self.max_iters = max_iters
+        self.last_epoch = last_epoch
+
+        assert factor <= 1 and factor >= 0, 'Factor must be between 0 and 1' 
+
+    def update(self):
+        learning_rate = self.learning_rate
+    
+        if self.last_epoch == 0 or learning_rate < self.max_iters:
+            learning_rate = learning_rate + self.factor
+
+        self.learning_rate = learning_rate
+        self.step_count += 1
+        self.last_epoch += 1
+
         return learning_rate
