@@ -39,7 +39,7 @@ class StepLR(LRSchedule):
 
 @dataclass 
 class MultiStepLR(LRSchedule):
-def __init__(self, learning_rate, milestones, gamma, last_epoch=-1):
+    def __init__(self, learning_rate, milestones, gamma, last_epoch=-1):
         self.learning_rate = learning_rate
         self.milestones = milestones
         self.gamma = gamma
