@@ -10,9 +10,9 @@ class LRSchedule:
     interation and a function that updates the learning rate for the next optimizer 
     operation. 
     """
-    last_epoch: Scalar
-    learning_rate: Scalar
-    step_count: Scalar = 0
+    last_epoch: int
+    learning_rate: int
+    step_count: int = 0
     update: Callable
 
 
@@ -27,13 +27,14 @@ class StepLR(LRSchedule):
         
     def update(self):
         learning_rate = self.learning_rate
-        self.last_epoch += 1c
 
         if self.last_epoch == 0 or self.last_epoch % self.step_size == 0:
             self.learning_rate = learning_rate * gamma
             return learning_rate * gamma 
-        
+
+        self.last_epoch += 1           
         self.step_count += 1
+
         return learning_rate
 
 @dataclass 
@@ -46,14 +47,14 @@ def __init__(self, learning_rate, milestones, gamma, last_epoch=-1):
 
     def update(self):
         learning_rate = self.learning_rate
-        self.last_epoch += 1
         
         if self.last_epoch == 0 or self.last_epoch is in self.milestones:
             self.learning_rate = learning_rate * gamma
             return learning_rate * gamma 
         
         self.step_count += 1
-        
+        self.last_epoch += 1
+
         return learning_rate
 
 @dataclass

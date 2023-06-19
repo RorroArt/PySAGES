@@ -23,6 +23,7 @@ from pysages.ml.objectives import (
 from pysages.ml.utils import dispatch, pack, unpack
 from pysages.typing import Any, Callable, JaxArray, NamedTuple, Tuple, Union
 from pysages.utils import solve_pos_def, try_import
+from pysages.ml.lr_schedule import LRSchedule
 
 jopt = try_import("jax.example_libraries.optimizers", "jax.experimental.optimizers")
 
@@ -117,6 +118,7 @@ class Adam(Optimizer):
     reg: Regularizer = L2Regularization(0.0)
     tol: float = 1e-4
     max_iters: int = 10000
+    lr_schedule: LRSchedule = None
 
 
 @dataclass
