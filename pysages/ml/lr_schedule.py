@@ -20,8 +20,6 @@ class StepLR(LRSchedule):
     def __init__(self, learning_rate, step_size, gamma):
         self.step_size = step_size
         self.gamma = gamma
-        last_iter = last_epoch
-
         
     def update(self, i):
         learning_rate = self.learning_rate
@@ -103,7 +101,6 @@ class ConstantLR(LRSchedule):
     def __init__(self, factor=1/3, max_iters=5):
         self.factor = factor
         self.max_iters = max_iters
-        last_iter = last_epoch
 
         assert factor <= 1 and factor >= 0, 'Factor must be between 0 and 1' 
 
