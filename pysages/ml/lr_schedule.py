@@ -48,7 +48,7 @@ class MultiStepLR(LRSchedule):
     def update(self):
         learning_rate = self.learning_rate
         
-        if self.last_epoch == 0 or self.last_epoch is self.milestones:
+        if self.last_epoch == 0 or self.last_epoch in self.milestones:
             self.learning_rate = learning_rate * gamma
             return learning_rate * gamma 
         
