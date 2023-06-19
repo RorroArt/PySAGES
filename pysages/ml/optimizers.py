@@ -177,11 +177,6 @@ def build(optimizer: Adam, model):
         data, params, iters, _ = state
         dp = gradient(repack(params), *data)
         params = _update(iters, dp, params)
-
-        if optimizer.lr_schedule is not None:
-            new_lr = optimizer.lr_schedule.update()
-            optimizer.params = AdamParams(new_lr)
-
         improved = sum_squares(unpack(dp)[0]) > optimizer.tol
         return WrappedState(data, params, iters + 1, improved)
 
