@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 import math
 
-from pysages.typing import JaxArray, NamedTuple, Scalar
+from pysages.typing import JaxArray, NamedTuple, Scalar, Callable
 
 @dataclass
 class LRSchedule:
