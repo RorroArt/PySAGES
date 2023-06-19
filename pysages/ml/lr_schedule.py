@@ -58,7 +58,7 @@ class MultiStepLR(LRSchedule):
         return learning_rate
 
 @dataclass
-class CosineAnnealingLR(LRScheduler):
+class CosineAnnealingLR(LRSchedule):
     def __init__(self, T_max, eta_min=0, last_epoch=-1):
         self.T_max = T_max
         self.eta_min = eta_min
@@ -83,7 +83,7 @@ class CosineAnnealingLR(LRScheduler):
         return learning_rate
 
 @dataclass
-class ConstantLR(LRScheduler):
+class ConstantLR(LRSchedule):
     def __init__(self, factor=1/3, max_iters=5, last_epoch=-1):
         self.factor = factor
         self.max_iters = max_iters
@@ -104,7 +104,7 @@ class ConstantLR(LRScheduler):
         return learning_rate
 
 @dataclass
-class ConstantLR(LRScheduler):
+class ConstantLR(LRSchedule):
     def __init__(self, factor=1/3, max_iters=5, last_epoch=-1):
         self.factor = factor
         self.max_iters = max_iters
@@ -124,7 +124,7 @@ class ConstantLR(LRScheduler):
         return learning_rate
 
 @dataclass
-class LinearLR(LRScheduler):
+class LinearLR(LRSchedule):
     def __init__(self, inital_factor=1/3, final_factor=1, max_iters=5, last_epoch=-1):
         self.initial_factor = initial_factor
         self.final_factor = final_factor
