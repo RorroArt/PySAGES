@@ -74,9 +74,7 @@ class CosineAnnealingLR(LRScheduler):
         elif (self.last_epoch - 1 - self.T_max) % (2 * self.T_max):
             learning_rate = + (base_lr - self.eta_min) * (1 - math.cos(math.pi / self.T_max)) / 2
         else:
-            learning_rate = (1 + math.cos(math.pi * self.last_epoch / self.T_max)) /
-                (1 + math.cos(math.pi * (self.last_epoch - 1) / self.T_max)) *
-                (learning_rate - self.eta_min) + self.eta_min
+            learning_rate = (1 + math.cos(math.pi * self.last_epoch / self.T_max)) / (1 + math.cos(math.pi * (self.last_epoch - 1) / self.T_max)) * (learning_rate - self.eta_min) + self.eta_min
         
         self.learning_rate = learning_rate
         self.step_count += 1
