@@ -12,8 +12,8 @@ class LRSchedule:
     """
     last_epoch: int
     learning_rate: int
-    step_count: int = 0
     update: Callable
+    step_count: int = 0
 
 
 @dataclass
