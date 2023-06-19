@@ -20,6 +20,7 @@ class StepLR(LRSchedule):
     def __init__(self, learning_rate, step_size, gamma):
         self.step_size = step_size
         self.gamma = gamma
+        self.learning_rate = learning_rate
         
     def update(self, i):
         learning_rate = self.learning_rate
@@ -54,10 +55,11 @@ class MultiStepLR(LRSchedule):
 
 @dataclass
 class CosineAnnealingLR(LRSchedule):
-    def __init__(self, T_max, eta_min=0):
+    def __init__(self, learning_rate, T_max, eta_min=0):
         self.T_max = T_max
         self.eta_min = eta_min
-        
+        self.learning_rate = learning_rate
+
     def update(self, i):
         learning_rate = self.learning_rate
         last_iter = i-1
@@ -98,9 +100,10 @@ class ConstantLR(LRSchedule):
 
 @dataclass
 class ConstantLR(LRSchedule):
-    def __init__(self, factor=1/3, max_iters=5):
+    def __init__(self, learning_rate, factor=1/3, max_iters=5):
         self.factor = factor
         self.max_iters = max_iters
+        self.learning_rate = learning_rate
 
         assert factor <= 1 and factor >= 0, 'Factor must be between 0 and 1' 
 
@@ -117,10 +120,11 @@ class ConstantLR(LRSchedule):
 
 @dataclass
 class LinearLR(LRSchedule):
-    def __init__(self, inital_factor=1/3, final_factor=1, max_iters=5):
+    def __init__(self, learning_rate, inital_factor=1/3, final_factor=1, max_iters=5):
         self.initial_factor = initial_factor
         self.final_factor = final_factor
         self.max_iters = max_iters
+        self.learning_rate = learning_rate
 
         assert initial_factor <= 1 and factor >= 0, 'Initial factor must be between 0 and 1'
         assert final_factor <= 1 and factor >= 0, 'Final factor must be between 0 and 1'  
