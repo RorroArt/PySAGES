@@ -41,6 +41,10 @@ class AdamParams(NamedTuple):
     beta_2: float = 0.999
     tol: float = 1e-8
 
+    @step_size.setter
+    def set_step_size(self, x):
+        self.step_size = x
+
 
 class LevenbergMarquardtParams(NamedTuple):
     """
