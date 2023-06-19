@@ -41,10 +41,6 @@ class AdamParams(NamedTuple):
     beta_2: float = 0.999
     tol: float = 1e-8
 
-    @step_size.setter
-    def set_step_size(self, x):
-        self.step_size = x
-
 
 class LevenbergMarquardtParams(NamedTuple):
     """
@@ -183,7 +179,8 @@ def build(optimizer: Adam, model):
         params = _update(iters, dp, params)
 
         if optimizer.lr_schedule is not None:
-            optimizer.params.step_size = optimizer.lr_schedule.update()
+            new_lr = optimizer.lr_schedule.update()
+            optimizer.params = AdamParams(new_lr)
 
         improved = sum_squares(unpack(dp)[0]) > optimizer.tol
         return WrappedState(data, params, iters + 1, improved)
