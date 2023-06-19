@@ -26,7 +26,7 @@ class StepLR(LRSchedule):
         learning_rate = self.learning_rate
         last_iter = i-1
 
-        if last_iter == 0 or last_iter % self.step_size == 0:
+        if last_iter == 0 or last_iter % self.step_size != 0:
             self.learning_rate = learning_rate * gamma
             return learning_rate * gamma 
 
