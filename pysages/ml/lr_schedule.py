@@ -26,9 +26,9 @@ class StepLR(LRSchedule):
         learning_rate = self.learning_rate
         last_iter = i-1
 
-        if last_iter == 0 or last_iter % self.step_size != 0:
-            self.learning_rate = learning_rate * gamma
-            return learning_rate * gamma 
+        if last_iter == 0 or (last_iter % self.step_size != 0):
+            self.learning_rate = learning_rate * self.gamma
+            return learning_rate * self.gamma 
 
         self.step_count += 1
 
@@ -46,8 +46,8 @@ class MultiStepLR(LRSchedule):
         last_iter = i - 1
 
         if last_iter == 0 or last_iter in self.milestones:
-            self.learning_rate = learning_rate * gamma
-            return learning_rate * gamma 
+            self.learning_rate = learning_rate * self.gamma
+            return learning_rate * self.gamma 
         
         self.step_count += 1
 
