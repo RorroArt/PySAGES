@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import math
+from operator import indexOf
 
 from pysages.typing import JaxArray, NamedTuple, Scalar, Callable
 
@@ -17,23 +18,28 @@ class LRSchedule:
 
 @dataclass
 class StepLR(LRSchedule):
-    def __init__(self, learning_rate, step_size, gamma):
+    def __init__(self, learning_rate, step_size, gamma, last_iter=-1):
         self.step_size = step_size
         self.gamma = gamma
         self.learning_rate = learning_rate
+        self.last_iter = last_iter
+
         
     def update(self, i):
-        learning_rate = self.learning_rate
+        #learning_rate = self.learning_rate
         last_iter = i-1
 
-        if last_iter == 0 or (last_iter % self.step_size != 0):
-            self.learning_rate = learning_rate * self.gamma
-            return learning_rate * self.gamma 
+        lr = jax.lax.cond(
+            (last_iter == self.last_iter) | ((last_iter == 0) | (last_iter % self.step_size != 0)), 
+            lambda _: self.learning_rate * self.gamma ** jnp.floor(last_iter / self.step_size), 
+            lambda _: self.learning_rate * self.gamma ** (last_iter / self.step_size),
+            1)
+        
+        self.last_iter = last_iter
 
-        self.step_count += 1
+        return lr
 
-        return learning_rate
-
+# Broken
 @dataclass 
 class MultiStepLR(LRSchedule):
     def __init__(self, learning_rate, milestones, gamma):
@@ -53,6 +59,7 @@ class MultiStepLR(LRSchedule):
 
         return learning_rate
 
+# Not Tested
 @dataclass
 class CosineAnnealingLR(LRSchedule):
     def __init__(self, learning_rate, T_max, eta_min=0):
@@ -78,6 +85,7 @@ class CosineAnnealingLR(LRSchedule):
 
         return learning_rate
 
+# Not tested
 @dataclass
 class ConstantLR(LRSchedule):
     def __init__(self, factor=1/3, max_iters=5):
@@ -98,6 +106,7 @@ class ConstantLR(LRSchedule):
 
         return learning_rate
 
+# Not tested
 @dataclass
 class ConstantLR(LRSchedule):
     def __init__(self, learning_rate, factor=1/3, max_iters=5):
@@ -118,6 +127,7 @@ class ConstantLR(LRSchedule):
 
         return learning_rate
 
+# Not tested
 @dataclass
 class LinearLR(LRSchedule):
     def __init__(self, learning_rate, inital_factor=1/3, final_factor=1, max_iters=5):
