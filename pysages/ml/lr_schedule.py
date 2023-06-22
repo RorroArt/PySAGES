@@ -3,6 +3,8 @@ import math
 from operator import indexOf
 
 from pysages.typing import JaxArray, NamedTuple, Scalar, Callable
+import jax 
+import jax.numpy as jnp
 
 def step_schedule(
     initial_lr,
