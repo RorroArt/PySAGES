@@ -33,7 +33,6 @@ def multistep_schedule(
         return lr
     return update
 
-def 
 
 def cosine_annealing_schedule(
     initial_lr,
@@ -59,7 +58,7 @@ def constant_schedule(
         lr = lr * (factor ** i)
         return lr
     return update
-    
+
 def exponential_schedule(
     initial_lr,
     gamma,
