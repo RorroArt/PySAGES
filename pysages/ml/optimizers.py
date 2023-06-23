@@ -201,9 +201,9 @@ def build(optimizer: BatchAdam, model, process_batch):
     max_iters = optimizer.max_iters
     _, layout = unpack(model.parameters)
 
-    def initialize(params, x, y):
+    def initialize(params, data):
         wrapped_params = _init(pack(params, layout))
-        return WrappedState((x, y), wrapped_params)
+        return WrappedState(data, wrapped_params)
 
     def keep_iterating(state):
         return state.improved & (state.iters < max_iters)
