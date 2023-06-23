@@ -39,7 +39,7 @@ class AdamParams(NamedTuple):
     beta_1: float = 0.9
     beta_2: float = 0.999
     tol: float = 1e-8
-
+ 
 
 class LevenbergMarquardtParams(NamedTuple):
     """
@@ -120,6 +120,19 @@ class Adam(Optimizer):
 
 
 @dataclass
+class BatchAdam(Optimizer):
+    """
+    ADAM optimizer from stax.example_libraries.optimizers supporting batch
+    optimization.
+    """
+
+    params: AdamParams = AdamParams()
+    loss: Loss = SSE()
+    reg: Regularizer = L2Regularization(0.0)
+    tol: float = 1e-4
+    max_iters: int = 10000
+
+@dataclass
 class LevenbergMarquardt(Optimizer):
     """
     Levenberg-Marquardt optimizer.
@@ -180,6 +193,31 @@ def build(optimizer: Adam, model):
 
     return initialize, keep_iterating, update
 
+@dispatch
+def build(optimizer: BatchAdam, model, process_batch):
+    _init, _update, repack = jopt.adam(*optimizer.params)
+    objective = build_objective_function(model, optimizer.loss, optimizer.reg)
+    gradient = jax.grad(objective)
+    max_iters = optimizer.max_iters
+    _, layout = unpack(model.parameters)
+
+    def initialize(params, x, y):
+        wrapped_params = _init(pack(params, layout))
+        return WrappedState((x, y), wrapped_params)
+
+    def keep_iterating(state):
+        return state.improved & (state.iters < max_iters)
+
+    def update(state):
+        data, params, iters, _ = state
+        for batch in data:
+            inputs = process_batch(batch)
+            dp = gradient(repack(params), *inputs)
+            params = _update(iters, dp, params)
+        improved = sum_squares(unpack(dp)[0]) > optimizer.tol
+        return WrappedState(data, params, iters + 1, improved)
+
+    return initialize, keep_iterating, update
 
 @dispatch
 def build(optimizer: LevenbergMarquardt, model):
