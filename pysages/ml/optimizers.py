@@ -131,6 +131,7 @@ class BatchAdam(Optimizer):
     reg: Regularizer = L2Regularization(0.0)
     tol: float = 1e-4
     max_iters: int = 10000
+    
 
 @dataclass
 class LevenbergMarquardt(Optimizer):
@@ -194,7 +195,7 @@ def build(optimizer: Adam, model):
     return initialize, keep_iterating, update
 
 @dispatch
-def build(optimizer: BatchAdam, model):
+def build(optimizer: BatchAdam, model, process_batch):
     _init, _update, repack = jopt.adam(*optimizer.params)
     objective = build_objective_function(model, optimizer.loss, optimizer.reg)
     gradient = jax.grad(objective)
