@@ -59,7 +59,7 @@ def build_fitting_function(model, optimizer:BatchAdam, preprocess_batch):
         return state
 
     @dispatch
-    def fit(params, batch)
+    def fit(params, batch):
         state = initialize(params, x, y)
         state = while_loop(keep_iterating, update, state)
         return state
