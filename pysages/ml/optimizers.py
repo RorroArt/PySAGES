@@ -194,7 +194,7 @@ def build(optimizer: Adam, model):
     return initialize, keep_iterating, update
 
 @dispatch
-def build(optimizer: BatchAdam, model, process_batch):
+def build(optimizer: BatchAdam, model):
     _init, _update, repack = jopt.adam(*optimizer.params)
     objective = build_objective_function(model, optimizer.loss, optimizer.reg)
     gradient = jax.grad(objective)
