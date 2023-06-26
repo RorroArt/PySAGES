@@ -80,6 +80,7 @@ def build_fitting_function(model, optimizer):
         iters = state.iters
         params, _, _ = state.params
         params, _ = unpack(params)
+        print(params.shape)
         state = initialize(params, x, y)
         state = state._replace(iters=iters)
         state = while_loop(keep_iterating, update, state)
