@@ -53,7 +53,6 @@ def build_fitting_function(model, optimizer:BatchAdam, preprocess_batch):
     @dispatch
     def fit(params: WrappedState, x, y):
         iters = params.iters
-        state = initialize(params, x, y)
         state = state._replace(iters=iters)
         state = while_loop(keep_iterating, update, state)
         return state
