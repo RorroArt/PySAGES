@@ -77,9 +77,6 @@ def build_fitting_function(model, optimizer):
     @dispatch
     def fit(state: WrappedState, x, y):
         iters = state.iters
-        params, _, _ = state.params
-        params, _ = unpack(params)
-        state = initialize(params, x, y)
         state = state._replace(iters=iters)
         state = while_loop(keep_iterating, update, state)
         return state
