@@ -7,7 +7,7 @@ from jax import numpy as np
 from jax.lax import while_loop
 from jax.scipy import signal
 
-from pysages.ml.utils import dispatch
+from pysages.ml.utils import dispatch, unpack
 from pysages.ml.optimizers import build, WrappedState, BatchAdam
 from pysages.typing import JaxArray, NamedTuple, Scalar
 
@@ -79,6 +79,7 @@ def build_fitting_function(model, optimizer):
     def fit(state: WrappedState, x, y):
         iters = state.iters
         params, _, _ = state.params
+        params, _ = unpack(params)
         state = initialize(params, x, y)
         state = state._replace(iters=iters)
         state = while_loop(keep_iterating, update, state)
