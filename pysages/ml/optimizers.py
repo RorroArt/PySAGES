@@ -189,7 +189,6 @@ def build(optimizer: Adam, model):
         data, params, iters, _ = state
         dp = gradient(repack(params), *data)
         params = _update(iters, dp, params)
-        jax.debug.print('is updating')
         improved = sum_squares(unpack(dp)[0]) > optimizer.tol
         return WrappedState(data, params, iters + 1, improved)
 
